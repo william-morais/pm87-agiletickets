@@ -34,6 +34,13 @@ public class Sessao {
 
 	private BigDecimal preco;
 
+	public Sessao(DateTime inicio) {
+		this.inicio = inicio;
+	}
+	
+	public Sessao() {
+	}
+
 	public Long getId() {
 		return id;
 	}
