@@ -3,6 +3,12 @@ package br.com.caelum.agiletickets.models;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import java.util.List;
+
+import junit.framework.Assert;
+
+import org.joda.time.LocalDate;
+import org.joda.time.LocalTime;
 import org.junit.Test;
 
 public class EspetaculoTest {
@@ -79,6 +85,14 @@ public class EspetaculoTest {
 		sessao.setIngressosReservados(quantidade);
 
 		return sessao;
+	}
+	@Test
+	public void criaSessaoIniciaETerminaNoMesmoDia(){
+		Espetaculo ivete = new Espetaculo();
+		
+		List<Sessao> criaSessoes = ivete.criaSessoes(new LocalDate(2014, 8, 10), new LocalDate(2014, 8, 10), new LocalTime(20, 0), Periodicidade.DIARIA);
+		
+		Assert.assertEquals(1, criaSessoes.size());
 	}
 	
 }
