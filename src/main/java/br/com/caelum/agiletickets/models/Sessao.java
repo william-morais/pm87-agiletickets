@@ -93,11 +93,6 @@ public class Sessao {
 		this.ingressosReservados = ingressosReservados;
 	}
 
-	public Integer getIngressosDisponiveis() {
-		// faz a conta de total de ingressos menos ingressos reservados
-		return totalIngressos - ingressosReservados;
-	}
-
 	public void reserva(Integer numeroDeIngressos) {
 		// soma quantidade na variavel ingressos reservados
 		this.ingressosReservados += numeroDeIngressos;
@@ -108,6 +103,10 @@ public class Sessao {
         boolean naoTemEspaco = sobraram < 0;
 
         return !naoTemEspaco;
+	}
+
+	public Integer getIngressosDisponiveis() {
+		return totalIngressos - ingressosReservados;
 	}
 
 	public void setPreco(BigDecimal preco) {
