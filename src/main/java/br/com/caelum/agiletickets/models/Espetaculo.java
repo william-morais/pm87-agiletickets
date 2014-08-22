@@ -2,6 +2,7 @@ package br.com.caelum.agiletickets.models;
 
 import static com.google.common.collect.Lists.newArrayList;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Entity;
@@ -13,8 +14,11 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
+import org.joda.time.Days;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalTime;
+
+import br.com.caelum.agiletickets.domain.PeriodoInvalidoException;
 
 @Entity
 public class Espetaculo {
@@ -95,10 +99,22 @@ public class Espetaculo {
      * a cada 7 dias: 01/01, 08/01, 15/01, 22/01 e 29/01.
      * 
      * Repare que a data da primeira sessao é sempre a data inicial.
+	 * @throws PeriodoInvalidoException 
      */
-	public List<Sessao> criaSessoes(LocalDate inicio, LocalDate fim, LocalTime horario, Periodicidade periodicidade) {
-		// ALUNO: Não apague esse metodo. Esse sim será usado no futuro! ;)
-		return null;
+	public List<Sessao> criaSessoes(LocalDate inicio, LocalDate fim, LocalTime horario, Periodicidade periodicidade) throws PeriodoInvalidoException {
+		List<Sessao> sessoes = new ArrayList<Sessao>();
+		
+		int quantidadeDeSessoes = Days.daysBetween(inicio, fim).dividedBy(periodicidade.getDias()).getDays();
+		if(quantidadeDeSessoes < 0){
+			throw new PeriodoInvalidoException("O periodo informado para criacao de sessoes sao invalido.");
+		}
+		
+		for (int day = 0; day < quantidadeDeSessoes + 1; day++) {
+			LocalDate dataInicial = inicio.plusDays(day * periodicidade.getDias());
+			sessoes.add(new Sessao(dataInicial.toDateTime(horario)));
+		}
+		
+		return sessoes;
 	}
 	
 	public boolean Vagas(int qtd, int min)

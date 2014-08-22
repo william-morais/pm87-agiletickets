@@ -12,6 +12,7 @@ import org.joda.time.LocalTime;
 
 import br.com.caelum.agiletickets.domain.Agenda;
 import br.com.caelum.agiletickets.domain.DiretorioDeEstabelecimentos;
+import br.com.caelum.agiletickets.domain.PeriodoInvalidoException;
 import br.com.caelum.agiletickets.domain.precos.CalculadoraDePrecos;
 import br.com.caelum.agiletickets.models.Espetaculo;
 import br.com.caelum.agiletickets.models.Periodicidade;
@@ -80,7 +81,13 @@ public class EspetaculosController {
 
 		// aqui faz a magica!
 		// cria sessoes baseado no periodo de inicio e fim passados pelo usuario
-		List<Sessao> sessoes = espetaculo.criaSessoes(inicio, fim, horario, periodicidade);
+		List<Sessao> sessoes = null;
+		try {
+			sessoes = espetaculo.criaSessoes(inicio, fim, horario, periodicidade);
+		} catch (PeriodoInvalidoException ex) {
+			validator.add(new ValidationMessage(ex.getMessage(), ""));
+		}
+		validator.onErrorRedirectTo(this).sessoes(espetaculoId);
 
 		agenda.agende(sessoes);
 
@@ -134,4 +141,5 @@ public class EspetaculosController {
 		validator.onErrorUse(status()).notFound();
 		return espetaculo;
 	}
+
 }
